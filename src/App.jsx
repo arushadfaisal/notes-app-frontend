@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
@@ -14,11 +14,21 @@ function Note({ title, content }){
 }
 
 function App() {
-  const [list, setList] = useState([
-    {title : "Note1", content : "This is my note 1. I did not want to make it this long. But I happened to just make it this long to test grids." },
-    {title : "Note2", content : "This is my note 2" },
-    {title : "Note3", content : "This is my note 3" }
-  ]);
+  const [list, setList] = useState([]);
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        const response = await fetch ('http://127.0.0.1:8000/api/notes');
+        const data = await response.json();
+        setList(data);
+      } catch (error) {
+        console.error('Error fetching notes:', error);
+      }
+    };
+
+    fetchNotes();
+  }, []);
 
   return (
     <>
@@ -30,14 +40,14 @@ function App() {
       </section>
 
       <section id="body">
-        <div class="addNote flex flex-row w-full h-auto mx-auto my-4 mb-10 max-w-9/10 md:max-w-8/10 
+        <div className="addNote flex flex-row w-full h-auto mx-auto my-4 mb-10 max-w-9/10 md:max-w-8/10 
                     justify-center items-center bg-slate-700/10">
-          <div class="flex flex-col w-full h-auto items-center gap-2 p-3">
+          <div className="flex flex-col w-full h-auto items-center gap-2 p-3">
             <label className='w-full flex justify-center'>
               <input 
                 name="title" 
                 defaultValue="Title" 
-                class="w-full p-4 bg-slate-700/30"/>
+                className="w-full p-4 bg-slate-700/30"/>
             </label>
             <label className='w-full flex justify-center'>
               <textarea 
@@ -47,7 +57,7 @@ function App() {
                   e.target.style.height = 'auto';
                   e.target.style.height = `${e.target.scrollHeight}px`;
                 }}
-                class="w-full min-h-32 h-auto p-4 bg-slate-700/30 align-top resize-y"/>
+                className="w-full min-h-32 h-auto p-4 bg-slate-700/30 align-top resize-y"/>
             </label>
             <div id="addNoteButtons" className='flex w-full flex-row gap-4 justify-between'>
                 <button className='px-3 py-1  bg-red-900 text-slate-300'>Reset</button>
@@ -58,9 +68,9 @@ function App() {
       </section>
 
       <section id="notes">
-        <div class="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 p-4">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 p-4">
                 {list.map((note, index) => (
-                  <Note key={index} title={note.title} content={note.content} />
+                  <Note key={note.id} title={note.title} content={note.content} />
                 ))}
         </div>
       </section>
