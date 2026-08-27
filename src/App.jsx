@@ -15,6 +15,8 @@ function Note({ title, content }){
 
 function App() {
   const [list, setList] = useState([]);
+  const [title, setTitle] = useState('Title');
+  const [content, setContent] = useState('Details');
 
   useEffect(() => {
     const fetchNotes = async () => {
@@ -42,37 +44,36 @@ function App() {
       </section>
 
       <section id="body">
-        <div className="addNote flex flex-row w-full h-auto mx-auto my-4 mb-10 max-w-9/10 md:max-w-8/10 
+        <form className="addNote flex flex-row w-full h-auto mx-auto my-4 mb-10 max-w-9/10 md:max-w-8/10 
                     justify-center items-center bg-slate-700/10">
           <div className="flex flex-col w-full h-auto items-center gap-2 p-3">
             <label className='w-full flex justify-center'>
               <input 
-                name="title" 
-                defaultValue="Title" 
+                value={title}
                 onClick={(e) => {
                   if (e.target.value === 'Title') {
-                    e.target.value = '';
+                    setTitle('');
                   }
                 }}
                 onBlur={(e) => {
                   if (e.target.value === '') {
-                    e.target.value = 'Title';
+                    setTitle('Title');
                   }
                 }}
                 className="w-full p-4 bg-slate-700/30"/>
             </label>
             <label className='w-full flex justify-center'>
               <textarea 
-                name="content" 
+                value={content}
                 defaultValue="Details" 
                 onFocus={(e) => {
                   if (e.target.value === 'Details') {
-                    e.target.value = '';
+                    setContent('');
                   }
                 }}
                 onBlur={(e) => {
                   if (e.target.value === '') {
-                    e.target.value = 'Details';
+                    setContent('Details');
                   }
                 }}
                 onInput={(e) => {
@@ -83,10 +84,10 @@ function App() {
             </label>
             <div id="addNoteButtons" className='flex w-full flex-row gap-4 justify-between'>
                 <button className='px-3 py-1  bg-red-900 text-slate-300' onClick={clearInputs}>Reset</button>
-                <button className='px-3 py-1 bg-sky-900 text-slate-300' onClick={addNote}>Add</button>
+                <button className='px-3 py-1 bg-sky-900 text-slate-300'>Add</button>
             </div>
           </div>
-        </div>
+        </form>
       </section>
 
       <section id="notes">
