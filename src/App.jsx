@@ -6,7 +6,7 @@ import './App.css'
 
 function Note({ title, content }){
   return(
-    <div className="flex flex-col bg-slate-700 p-6 shadow-sm min-h-30">
+    <div className="flex flex-col bg-slate-700 p-4 pt-2 shadow-sm min-h-30">
       <div className="p-2 min-h-10 text-start font-bold text-slate-200 text-lg">{title}</div>
       <div className="p-2 min-h-20 text-start text-slate-300 bg-slate-800/50">{content}</div>
     </div>
@@ -49,12 +49,32 @@ function App() {
               <input 
                 name="title" 
                 defaultValue="Title" 
+                onClick={(e) => {
+                  if (e.target.value === 'Title') {
+                    e.target.value = '';
+                  }
+                }}
+                onBlur={(e) => {
+                  if (e.target.value === '') {
+                    e.target.value = 'Title';
+                  }
+                }}
                 className="w-full p-4 bg-slate-700/30"/>
             </label>
             <label className='w-full flex justify-center'>
               <textarea 
                 name="content" 
-                defaultValue="Content" 
+                defaultValue="Details" 
+                onFocus={(e) => {
+                  if (e.target.value === 'Details') {
+                    e.target.value = '';
+                  }
+                }}
+                onBlur={(e) => {
+                  if (e.target.value === '') {
+                    e.target.value = 'Details';
+                  }
+                }}
                 onInput={(e) => {
                   e.target.style.height = 'auto';
                   e.target.style.height = `${e.target.scrollHeight}px`;
@@ -62,8 +82,8 @@ function App() {
                 className="w-full min-h-32 h-auto p-4 bg-slate-700/30 align-top resize-y"/>
             </label>
             <div id="addNoteButtons" className='flex w-full flex-row gap-4 justify-between'>
-                <button className='px-3 py-1  bg-red-900 text-slate-300'>Reset</button>
-                <button className='px-3 py-1 bg-sky-900 text-slate-300'>Add</button>
+                <button className='px-3 py-1  bg-red-900 text-slate-300' onClick={clearInputs}>Reset</button>
+                <button className='px-3 py-1 bg-sky-900 text-slate-300' onClick={addNote}>Add</button>
             </div>
           </div>
         </div>
@@ -83,6 +103,14 @@ function App() {
       <section id="spacer"></section>
     </>
   )
+}
+
+function clearInputs(){
+  const titleInput = document.querySelector('input[name="title"]');
+  const contentInput = document.querySelector('textarea[name="content"]');
+  titleInput.value = 'Title';
+  contentInput.value = 'Details';
+  contentInput.style.height = 'auto';
 }
 
 export default App
