@@ -34,6 +34,25 @@ function App() {
     fetchNotes();
   }, []);
 
+  const addNote = async (e) => {
+    e.preventDefault();
+
+    const response = await fetch('http://127.0.0.1:8000/api/notes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ title,content }),
+    });
+
+    const newNote = await response.json();
+
+    setList([...list, newNote]);
+
+    setTitle('');
+    setContent('');
+  }
+
   return (
     <>
       <section id="header">
@@ -44,7 +63,8 @@ function App() {
       </section>
 
       <section id="body">
-        <form className="addNote flex flex-row w-full h-auto mx-auto my-4 mb-10 max-w-9/10 md:max-w-8/10 
+        <form onSubmit={addNote}
+        className="addNote flex flex-row w-full h-auto mx-auto my-4 mb-10 max-w-9/10 md:max-w-8/10 
                     justify-center items-center bg-slate-700/10">
           <div className="flex flex-col w-full h-auto items-center gap-2 p-3">
             <label className='w-full flex justify-center'>
@@ -70,7 +90,7 @@ function App() {
             </label>
             <div id="addNoteButtons" className='flex w-full flex-row gap-4 justify-between'>
                 <button className='px-3 py-1  bg-red-900 text-slate-300' onClick={clearInputs}>Reset</button>
-                <button className='px-3 py-1 bg-sky-900 text-slate-300'>Add</button>
+                <button className='px-3 py-1 bg-sky-900 text-slate-300' type="submit">Add</button>
             </div>
           </div>
         </form>
