@@ -21,7 +21,9 @@ function App() {
       try {
         const response = await fetch ('http://127.0.0.1:8000/api/notes');
         const data = await response.json();
-        setList(data);
+        if (Array.isArray(data)) {
+          setList(data);
+        }
       } catch (error) {
         console.error('Error fetching notes:', error);
       }
@@ -69,7 +71,7 @@ function App() {
 
       <section id="notes">
         <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 p-4">
-                {list.map((note, index) => (
+                {Array.isArray(list) && list.map((note, index) => (
                   <Note key={note.id} title={note.title} content={note.content} />
                 ))}
         </div>
