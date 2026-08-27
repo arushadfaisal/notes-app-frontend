@@ -60,6 +60,9 @@ function App() {
                     setTitle('Title');
                   }
                 }}
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                }}
                 className="w-full p-4 bg-slate-700/30"/>
             </label>
             <label className='w-full flex justify-center'>
@@ -76,7 +79,8 @@ function App() {
                     setContent('Details');
                   }
                 }}
-                onInput={(e) => {
+                onChange={(e) => {
+                  setContent(e.target.value);
                   e.target.style.height = 'auto';
                   e.target.style.height = `${e.target.scrollHeight}px`;
                 }}
