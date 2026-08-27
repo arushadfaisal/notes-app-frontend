@@ -15,8 +15,8 @@ function Note({ title, content }){
 
 function App() {
   const [list, setList] = useState([]);
-  const [title, setTitle] = useState('Title');
-  const [content, setContent] = useState('Details');
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
 
   useEffect(() => {
     const fetchNotes = async () => {
@@ -50,35 +50,17 @@ function App() {
             <label className='w-full flex justify-center'>
               <input 
                 value={title}
-                onClick={(e) => {
-                  if (e.target.value === 'Title') {
-                    setTitle('');
-                  }
-                }}
-                onBlur={(e) => {
-                  if (e.target.value === '') {
-                    setTitle('Title');
-                  }
-                }}
+                placeholder="Title"
                 onChange={(e) => {
                   setTitle(e.target.value);
                 }}
-                className="w-full p-4 bg-slate-700/30"/>
+                className="w-full p-4 bg-slate-700/30"
+              />
             </label>
             <label className='w-full flex justify-center'>
               <textarea 
                 value={content}
-                defaultValue="Details" 
-                onFocus={(e) => {
-                  if (e.target.value === 'Details') {
-                    setContent('');
-                  }
-                }}
-                onBlur={(e) => {
-                  if (e.target.value === '') {
-                    setContent('Details');
-                  }
-                }}
+                placeholder="Details"
                 onChange={(e) => {
                   setContent(e.target.value);
                   e.target.style.height = 'auto';
