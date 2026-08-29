@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { MdDelete } from 'react-icons/md'
 import './App.css'
 
 function Note({ title, content }){
   return(
     <div className="flex flex-col bg-slate-700 p-4 pt-2 shadow-sm min-h-30">
-      <div className="p-2 min-h-10 text-start font-bold text-slate-200 text-lg">{title}</div>
+      <div className="flex flex-row width-max place-content-between">
+        <div className="p-2 min-h-10 text-start font-bold text-slate-200 text-lg">{title}</div>
+        <button className="p-2 my-2 text-ls bg-red-900 rounded text-slate-100" 
+                onClick={handleDelete}>
+                <MdDelete />
+        </button>
+      </div>
       <div className="p-2 min-h-20 text-start text-slate-300 bg-slate-800/50">{content}</div>
     </div>
   );
@@ -37,20 +41,43 @@ function App() {
   const addNote = async (e) => {
     e.preventDefault();
 
-    const response = await fetch('http://127.0.0.1:8000/api/notes', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ title,content }),
-    });
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/notes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title,content }),
+      });
 
-    const newNote = await response.json();
+      const newNote = await response.json();
 
-    setList([...list, newNote]);
+      setList([...list, newNote]);
 
+      setTitle('');
+      setContent('');
+    }
+    catch {
+      console.error("Error adding new note: ", error);
+    }
+  }
+
+  const handleReset = () => {
     setTitle('');
     setContent('');
+  };
+
+  const handleDelete = async (e) => {
+    e.preventDefault();
+
+    try{
+      const response = await fetch('http://127.0.0.1:8000/api/notes/{id}', {
+        method: 'DELETE',
+      });
+    }
+    catch {
+      console.error("Error deleting note", error);
+    }
   }
 
   return (
@@ -63,7 +90,7 @@ function App() {
       </section>
 
       <section id="body">
-        <form onSubmit={addNote}
+        <form onSubmit={addNote} onReset={handleReset}
         className="addNote flex flex-row w-full h-auto mx-auto my-4 mb-10 max-w-9/10 md:max-w-8/10 
                     justify-center items-center bg-slate-700/10">
           <div className="flex flex-col w-full h-auto items-center gap-2 p-3">
@@ -89,15 +116,15 @@ function App() {
                 className="w-full min-h-32 h-auto p-4 bg-slate-700/30 align-top resize-y"/>
             </label>
             <div id="addNoteButtons" className='flex w-full flex-row gap-4 justify-between'>
-                <button className='px-3 py-1  bg-red-900 text-slate-300' onClick={clearInputs}>Reset</button>
-                <button className='px-3 py-1 bg-sky-900 text-slate-300' type="submit">Add</button>
+                <button className='px-3 py-1  bg-indigo-300/80 text-indigo-900' type="reset">Reset</button>
+                <button className='px-3 py-1 font-bold bg-indigo-900 text-indigo-200' type="submit">Add</button>
             </div>
           </div>
         </form>
       </section>
 
       <section id="notes">
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 p-4">
+        <div className="grid grid-cols-1 gap-6 p-4">
                 {Array.isArray(list) && list.map((note, index) => (
                   <Note key={note.id} title={note.title} content={note.content} />
                 ))}
@@ -110,14 +137,9 @@ function App() {
       <section id="spacer"></section>
     </>
   )
+
 }
 
-function clearInputs(){
-  const titleInput = document.querySelector('input[name="title"]');
-  const contentInput = document.querySelector('textarea[name="content"]');
-  titleInput.value = 'Title';
-  contentInput.value = 'Details';
-  contentInput.style.height = 'auto';
-}
+
 
 export default App
