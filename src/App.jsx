@@ -2,20 +2,7 @@ import { useEffect, useState } from 'react'
 import { MdDelete } from 'react-icons/md'
 import './App.css'
 
-function Note({ title, content }){
-  return(
-    <div className="flex flex-col bg-slate-700 p-4 pt-2 shadow-sm min-h-30">
-      <div className="flex flex-row width-max place-content-between">
-        <div className="p-2 min-h-10 text-start font-bold text-slate-200 text-lg">{title}</div>
-        <button className="p-2 my-2 text-ls bg-red-900 rounded text-slate-100" 
-                onClick={handleDelete}>
-                <MdDelete />
-        </button>
-      </div>
-      <div className="p-2 min-h-20 text-start text-slate-300 bg-slate-800/50">{content}</div>
-    </div>
-  );
-}
+
 
 function App() {
   const [list, setList] = useState([]);
@@ -57,7 +44,7 @@ function App() {
       setTitle('');
       setContent('');
     }
-    catch {
+    catch (error) {
       console.error("Error adding new note: ", error);
     }
   }
@@ -67,17 +54,34 @@ function App() {
     setContent('');
   };
 
-  const handleDelete = async (e) => {
-    e.preventDefault();
-
+  const handleDelete = async (id) => {
     try{
-      const response = await fetch('http://127.0.0.1:8000/api/notes/{id}', {
+      const response = await fetch(`http://127.0.0.1:8000/api/notes/${id}`, {
         method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        }
       });
+      setList(list.filter(note => note.id !== id));
     }
-    catch {
+    catch (error) {
       console.error("Error deleting note", error);
     }
+  }
+
+  function Note({ id, title, content, onDelete }){
+  return(
+    <div className="flex flex-col bg-slate-700 p-4 pt-2 shadow-sm min-h-30">
+      <div className="flex flex-row width-max place-content-between">
+        <div className="p-2 min-h-10 text-start font-bold text-slate-200 text-lg">{title}</div>
+        <button className="p-2 my-2 text-ls bg-red-900 rounded text-slate-100" onClick={() => onDelete(id)}>
+                <MdDelete />
+        </button>
+      </div>
+      <div className="p-2 min-h-20 text-start text-slate-300 bg-slate-800/50">{content}</div>
+    </div>
+    );
   }
 
   return (
@@ -126,7 +130,7 @@ function App() {
       <section id="notes">
         <div className="grid grid-cols-1 gap-6 p-4">
                 {Array.isArray(list) && list.map((note, index) => (
-                  <Note key={note.id} title={note.title} content={note.content} />
+                  <Note key={note.id} id={note.id} title={note.title} content={note.content} onDelete={handleDelete} />
                 ))}
         </div>
       </section>
