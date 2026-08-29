@@ -28,6 +28,10 @@ function App() {
   const addNote = async (e) => {
     e.preventDefault();
 
+    if (title.trim() === '' || content.trim() === ''){
+      return (console.error("Please enter all information"));
+    }
+
     try {
       const response = await fetch('http://127.0.0.1:8000/api/notes', {
         method: 'POST',
