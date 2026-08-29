@@ -2,7 +2,19 @@ import { useEffect, useState } from 'react'
 import { MdDelete } from 'react-icons/md'
 import './App.css'
 
-
+function Note({ id, title, content, onDelete }){
+  return(
+    <div className="flex flex-col bg-slate-700 p-4 pt-2 shadow-sm min-h-30">
+      <div className="flex flex-row width-max place-content-between">
+        <div className="p-2 min-h-10 text-start font-bold text-slate-200 text-lg">{title}</div>
+        <button className="p-2 my-2 text-ls bg-red-900 rounded text-slate-100" onClick={() => onDelete(id)}>
+                <MdDelete />
+        </button>
+      </div>
+      <div className="p-2 min-h-20 text-start text-slate-300 bg-slate-800/50">{content}</div>
+    </div>
+    );
+  }
 
 function App() {
   const [list, setList] = useState([]);
@@ -72,20 +84,6 @@ function App() {
     catch (error) {
       console.error("Error deleting note", error);
     }
-  }
-
-  function Note({ id, title, content, onDelete }){
-  return(
-    <div className="flex flex-col bg-slate-700 p-4 pt-2 shadow-sm min-h-30">
-      <div className="flex flex-row width-max place-content-between">
-        <div className="p-2 min-h-10 text-start font-bold text-slate-200 text-lg">{title}</div>
-        <button className="p-2 my-2 text-ls bg-red-900 rounded text-slate-100" onClick={() => onDelete(id)}>
-                <MdDelete />
-        </button>
-      </div>
-      <div className="p-2 min-h-20 text-start text-slate-300 bg-slate-800/50">{content}</div>
-    </div>
-    );
   }
 
   return (
